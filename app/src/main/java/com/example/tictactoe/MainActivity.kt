@@ -75,6 +75,7 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .background(Color.Red)
                 .weight(2f)) {
+            TicTacToeBoard()
         }
 
 //        player info
@@ -164,7 +165,7 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
 fun TicTacToeCell(row: Int, col: Int, modifier: Modifier= Modifier) {
     Box(
         modifier = Modifier
-            .size(50.dp)
+            .size(100.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color.LightGray),
         contentAlignment = Alignment.Center
@@ -175,19 +176,37 @@ fun TicTacToeCell(row: Int, col: Int, modifier: Modifier= Modifier) {
 @Composable
 fun TicTacToeBoard(modifier: Modifier= Modifier) {
     Column(modifier = Modifier
-        .fillMaxWidth()) {  }
+        .fillMaxWidth()
+        .padding(8.dp),
+        verticalArrangement = Arrangement.SpaceEvenly)
+    {
+        repeat(3) {
+            row ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth().padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+
+            ) {
+                repeat(3) {
+                    col ->
+                    TicTacToeCell(row, col)
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TicTacToeGamePreview() {
+    TicTacToeTheme {
+        TicTacToeGame()
+    }
 }
 
 //@Preview(showBackground = true)
 //@Composable
-//fun TicTacToeGamePreview() {
-//    TicTacToeTheme {
-//        TicTacToeGame()
-//    }
+//fun TicTacToeCellPreview() {
+//    TicTacToeBoard()
 //}
-
-@Preview(showBackground = true)
-@Composable
-fun TicTacToeCellPreview() {
-    TicTacToeCell(1,1)
-}
