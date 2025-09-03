@@ -74,7 +74,8 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Red)
-                .weight(2f)) {
+                .weight(2f),
+            contentAlignment = Alignment.Center) {
             TicTacToeBoard()
         }
 
