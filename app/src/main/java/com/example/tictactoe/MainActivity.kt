@@ -158,10 +158,36 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
     }
 }
 
+
+
+@Composable
+fun TicTacToeCell(row: Int, col: Int, modifier: Modifier= Modifier) {
+    Box(
+        modifier = Modifier
+            .size(50.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color.LightGray),
+        contentAlignment = Alignment.Center
+            ) {}
+
+}
+
+@Composable
+fun TicTacToeBoard(modifier: Modifier= Modifier) {
+    Column(modifier = Modifier
+        .fillMaxWidth()) {  }
+}
+
+//@Preview(showBackground = true)
+//@Composable
+//fun TicTacToeGamePreview() {
+//    TicTacToeTheme {
+//        TicTacToeGame()
+//    }
+//}
+
 @Preview(showBackground = true)
 @Composable
-fun TicTacToeGamePreview() {
-    TicTacToeTheme {
-        TicTacToeGame()
-    }
+fun TicTacToeCellPreview() {
+    TicTacToeCell(1,1)
 }
