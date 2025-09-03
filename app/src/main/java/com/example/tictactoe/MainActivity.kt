@@ -28,6 +28,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.tictactoe.ui.theme.TicTacToeTheme
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.clickable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.foundation.clickable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.colorResource
 
 
 class MainActivity : ComponentActivity() {
@@ -100,7 +111,7 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
                 Box(modifier = Modifier
                     .size(25.dp)
                     .clip(RoundedCornerShape(5.dp))
-                    .background(Color.hsl(0f,1f, .76f))
+                    .background(colorResource(id=R.color.player_one_color))
                 ) {
 
                 }
@@ -124,7 +135,7 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
                 Box(modifier = Modifier
                     .size(25.dp)
                     .clip(RoundedCornerShape(5.dp))
-                    .background(Color.hsl(131f, 0.52f, 0.50f))
+                    .background(color = colorResource(id=R.color.player_two_color))
                 ) {
 
                 }
@@ -163,12 +174,13 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
 
 
 @Composable
-fun TicTacToeCell(row: Int, col: Int, modifier: Modifier= Modifier) {
+fun TicTacToeCell(row: Int, col: Int, color: Color, onClick: ()-> Unit, modifier: Modifier= Modifier) {
     Box(
         modifier = Modifier
             .size(100.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.LightGray),
+            .background(color)
+            .clickable{onClick()},
         contentAlignment = Alignment.Center
             ) {}
 
@@ -176,6 +188,9 @@ fun TicTacToeCell(row: Int, col: Int, modifier: Modifier= Modifier) {
 
 @Composable
 fun TicTacToeBoard(modifier: Modifier= Modifier) {
+
+    var board by remember { mutableStateOf(List(3) {MutableList(3) {Color.LightGray} })}
+    var currentPlayer by remember { mutableStateOf(1) }
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(8.dp),
@@ -191,7 +206,20 @@ fun TicTacToeBoard(modifier: Modifier= Modifier) {
             ) {
                 repeat(3) {
                     col ->
-                    TicTacToeCell(row, col)
+                    TicTacToeCell(
+                        row = row,
+                        col = col,
+                        color = board[row][col],
+                        onClick = {
+                            if (board[row][col] == Color.LightGray) {
+                                val newBoard = board.map { it.toMutableList()}
+                                newBoard[row][col] =
+                                    if (currentPlayer == 1) colorResource(id=R.color.player_one_color) else colorResource(id=R.color.player_two_color)
+                                board = newBoard
+                                currentPlayer = if (currentPlayer == 1) 2 else 1
+                            }
+                        }
+                        )
                 }
             }
         }
