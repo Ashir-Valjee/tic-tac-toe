@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Tic Tac Toe</string>
+    <string name="title">Tic Tac Toe</string>
+    <string name="player_1_info">player 1: Ash</string>
+    <string name="player_2_info">player 2: Liza</string>
+    <string name="winner_info">The winner is ...</string>
+    <string name="new_game_button">Next Game</string>
 </resources>
