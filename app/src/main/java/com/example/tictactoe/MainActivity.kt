@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,12 +51,17 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
     Column(
         modifier = Modifier
         .fillMaxSize()
-        .background(Color.Cyan)) {
+        .background(Color.Cyan))
+
+    {
 
 //        title area
         Box(
             modifier = Modifier
-                .fillMaxWidth()) {
+                .fillMaxWidth()
+                .weight(0.5f),
+                contentAlignment = Alignment.Center
+            ) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -68,13 +74,14 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Red)
-                .weight(1f)) {
+                .weight(2f)) {
         }
 
 //        player info
         Column(
             modifier = Modifier
-                .fillMaxWidth()) {
+                .fillMaxWidth()
+                .weight(1f)) {
 
 //            player 1 info
             Row (
@@ -86,9 +93,7 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
                 ) {
                 Text(
                     modifier = Modifier,
-
-
-                    text = "player 1: Ash"
+                    text = stringResource(R.string.player_1_info)
                 )
                 Box(modifier = Modifier
                     .size(25.dp)
@@ -112,7 +117,7 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
                     modifier = Modifier,
 
 
-                    text = "player 2: Liza"
+                    text = stringResource(R.string.player_2_info)
                 )
                 Box(modifier = Modifier
                     .size(25.dp)
@@ -122,6 +127,32 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
 
                 }
 
+            }
+//            winner section
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    text = stringResource(R.string.winner_info)
+                )
+            }
+//            New game section
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+                contentAlignment = Alignment.Center
+            )
+            {
+
+                Button(onClick = {
+                    println("Button was clicked")
+                }) {
+                    Text(stringResource(R.string.new_game_button))
+                }
             }
         }
     }
