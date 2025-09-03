@@ -188,7 +188,8 @@ fun TicTacToeCell(row: Int, col: Int, color: Color, onClick: ()-> Unit, modifier
 
 @Composable
 fun TicTacToeBoard(modifier: Modifier= Modifier) {
-
+    val playerOneColor = colorResource(id = R.color.player_one_color)
+    val playerTwoColor = colorResource(id = R.color.player_two_color)
     var board by remember { mutableStateOf(List(3) {MutableList(3) {Color.LightGray} })}
     var currentPlayer by remember { mutableStateOf(1) }
     Column(modifier = Modifier
@@ -214,7 +215,7 @@ fun TicTacToeBoard(modifier: Modifier= Modifier) {
                             if (board[row][col] == Color.LightGray) {
                                 val newBoard = board.map { it.toMutableList()}
                                 newBoard[row][col] =
-                                    if (currentPlayer == 1) colorResource(id=R.color.player_one_color) else colorResource(id=R.color.player_two_color)
+                                    if (currentPlayer == 1) playerOneColor else playerTwoColor
                                 board = newBoard
                                 currentPlayer = if (currentPlayer == 1) 2 else 1
                             }
