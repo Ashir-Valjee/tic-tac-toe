@@ -1,5 +1,10 @@
 package com.example.tictactoe.game
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
@@ -112,12 +118,34 @@ fun TicTacToeBoard(
 }
 
 @Composable
-fun TicTacToeCell(row: Int, col: Int, color: Color, onClick: ()-> Unit, modifier: Modifier= Modifier) {
+fun TicTacToeCell(
+    row: Int,
+    col: Int,
+    color: Color,
+    onClick: ()-> Unit,
+    modifier: Modifier= Modifier) {
+
+    val animatedColor by animateColorAsState(
+        targetValue = color,
+        animationSpec = tween(durationMillis = 300),
+        label = "cellColor"
+    )
+
+    val targetScale = if (color != Color.LightGray) 1f else 0.9f
+    val animatedScale by animateFloatAsState(
+        targetValue = targetScale,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "cellScale"
+    )
     Box(
         modifier = Modifier
             .size(100.dp)
+            .scale(animatedScale)
             .clip(RoundedCornerShape(8.dp))
-            .background(color)
+            .background(animatedColor)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {}
