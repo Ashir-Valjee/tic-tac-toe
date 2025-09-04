@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +19,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -36,12 +34,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 
@@ -70,8 +72,8 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
 
     Column(
         modifier = Modifier
-        .fillMaxSize()
-        .background(colorResource(id=R.color.background)))
+            .fillMaxSize()
+            .background(colorResource(id = R.color.background)))
 
     {
 
@@ -125,7 +127,7 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
                 Box(modifier = Modifier
                     .size(25.dp)
                     .clip(RoundedCornerShape(5.dp))
-                    .background(colorResource(id=R.color.player_one_color))
+                    .background(colorResource(id = R.color.player_one_color))
                 ) {
 
                 }
@@ -149,7 +151,7 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
                 Box(modifier = Modifier
                     .size(25.dp)
                     .clip(RoundedCornerShape(5.dp))
-                    .background(color = colorResource(id=R.color.player_two_color))
+                    .background(color = colorResource(id = R.color.player_two_color))
                 ) {
 
                 }
@@ -196,7 +198,7 @@ fun TicTacToeCell(row: Int, col: Int, color: Color, onClick: ()-> Unit, modifier
             .size(100.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(color)
-            .clickable{onClick()},
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
             ) {}
 
@@ -227,7 +229,8 @@ fun TicTacToeBoard(
             row ->
             Row(
                 modifier = Modifier
-                    .fillMaxWidth().padding(8.dp),
+                    .fillMaxWidth()
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
 
             ) {
@@ -304,11 +307,137 @@ fun hasWinner(board: List<List<Color>>): Boolean {
 }
 
 
+@Composable
+fun HomeScreen(
+    modifier: Modifier= Modifier
+) {
+
+
+    var playerOne by remember { mutableStateOf("") }
+    var playerTwo by remember { mutableStateOf("") }
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.background)))
+
+    {
+//      Title
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.5f),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                ,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = colorResource(id=R.color.title),
+                text = stringResource(R.string.title))
+        }
+
+//        Players info form
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(26.dp)
+            ,
+            verticalArrangement = Arrangement.SpaceBetween
+        )
+        {
+//            Enter player 1 section
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            )
+            {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    text = "Enter player 1 name"
+                )
+
+                OutlinedTextField(
+                    value = playerOne,
+                    onValueChange = { playerOne = it },
+                    label = { Text("Player 1 name") },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+            }
+
+//            Enter player 2 section
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            )
+            {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    text = "Enter player 2 name"
+                )
+
+                OutlinedTextField(
+                    value = playerTwo,
+                    onValueChange = { playerTwo = it },
+                    label = { Text("Player 2 name") },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+            }
+
+        }
+
+
+
+//      Start Game
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f),
+            contentAlignment = Alignment.Center
+        )
+        {
+
+            Button(onClick = {
+                println("Started Game")
+            }
+            ) {
+                Text(stringResource(R.string.start_game_button))
+            }
+        }
+
+    }
+
+}
+
+
+//@Preview(showBackground = true)
+//@Composable
+//fun TicTacToeGamePreview() {
+//    TicTacToeTheme {
+//        TicTacToeGame()
+//    }
+//}
+
 @Preview(showBackground = true)
 @Composable
-fun TicTacToeGamePreview() {
+fun HomeScreenPreview() {
     TicTacToeTheme {
-        TicTacToeGame()
+        HomeScreen()
     }
 }
 
