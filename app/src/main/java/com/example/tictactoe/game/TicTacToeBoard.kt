@@ -75,7 +75,8 @@ fun TicTacToeBoard(
 
                                 if (hasWinner(newBoard)) {
                                     winningPlayer = currentPlayer
-                                    onStatusChange("The winner is player $winningPlayer")
+                                    val winnerName = if (winningPlayer == 1) playerOne else playerTwo
+                                    onStatusChange("The winner is $winnerName")
                                 } else {
 //                                  Check if there are no gray cells
                                     isDraw = newBoard.all {row -> row.all {it != Color.LightGray}}
@@ -84,7 +85,9 @@ fun TicTacToeBoard(
                                     }
                                     if (!isDraw) {
                                         currentPlayer = if (currentPlayer == 1) 2 else 1
+                                        val nextName = if (currentPlayer == 1) playerOne else playerTwo
                                         onStatusChange("Player $currentPlayer's turn ")
+                                        onStatusChange("$nextName's turn")
                                     }
                                 }
 
