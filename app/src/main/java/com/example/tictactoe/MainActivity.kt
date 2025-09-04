@@ -227,6 +227,38 @@ fun TicTacToeBoard(modifier: Modifier= Modifier) {
     }
 }
 
+fun hasWinner(board: List<List<Color>>): Boolean {
+//    Rows
+    for (row in 0 ..  2) {
+        val cellOne = board[row][0]
+        val cellTwo = board[row][1]
+        val cellThree = board[row][2]
+
+        if (cellOne != Color.LightGray && cellOne == cellTwo && cellOne == cellThree) {
+            return true
+        }
+    }
+//  Columns
+    for (col in 0 ..  2) {
+        val cellOne = board[0][col]
+        val cellTwo = board[1][col]
+        val cellThree = board[2][col]
+
+        if (cellOne != Color.LightGray && cellOne == cellTwo && cellOne == cellThree) {
+            return true
+        }
+    }
+//  Diagonals
+    val center = board[1][1]
+    if (center != Color.LightGray) {
+        if (board[0][0] == center && board[2][2] == center) return true
+        if (board[0][2] == center && board[2][0] == center) return true
+    }
+
+    return false
+}
+
+
 @Preview(showBackground = true)
 @Composable
 fun TicTacToeGamePreview() {
@@ -235,8 +267,3 @@ fun TicTacToeGamePreview() {
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun TicTacToeCellPreview() {
-//    TicTacToeBoard()
-//}
