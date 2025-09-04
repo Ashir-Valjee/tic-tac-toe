@@ -152,7 +152,7 @@ fun TicTacToeGame(
 
                 Button(onClick = {
                     gameId ++
-                    status = "Player 1's turn"
+                    status = "$playerOne's turn"
                 }
                 ) {
                     Text(stringResource(R.string.new_game_button))
