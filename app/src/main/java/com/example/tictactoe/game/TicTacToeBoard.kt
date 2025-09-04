@@ -27,6 +27,8 @@ import com.example.tictactoe.R
 @Composable
 fun TicTacToeBoard(
     modifier: Modifier= Modifier,
+    playerOne: String,
+    playerTwo: String,
     onStatusChange: (String) -> Unit={}
 ) {
     val playerOneColor = colorResource(id = R.color.player_one_color)
@@ -37,7 +39,7 @@ fun TicTacToeBoard(
     var isDraw by remember { mutableStateOf<Boolean> (false)}
 
     LaunchedEffect(Unit) {
-        onStatusChange("Player 1's turn")
+        onStatusChange("$playerOne's turn")
     }
 
     Column(modifier = Modifier
