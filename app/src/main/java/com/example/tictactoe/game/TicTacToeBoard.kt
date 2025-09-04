@@ -1,5 +1,10 @@
 package com.example.tictactoe.game
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,10 +24,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.example.tictactoe.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun TicTacToeBoard(
@@ -31,16 +38,22 @@ fun TicTacToeBoard(
     playerTwo: String,
     onStatusChange: (String) -> Unit={}
 ) {
+
+    val viewModel: TicTacToeViewModel = viewModel()
+
     val playerOneColor = colorResource(id = R.color.player_one_color)
     val playerTwoColor = colorResource(id = R.color.player_two_color)
-    var board by remember { mutableStateOf(List(3) {MutableList(3) {Color.LightGray} })}
-    var currentPlayer by remember { mutableStateOf(1) }
-    var winningPlayer by remember { mutableStateOf<Int?> (null)}
-    var isDraw by remember { mutableStateOf<Boolean> (false)}
 
-    LaunchedEffect(Unit) {
+
+
+    LaunchedEffect(playerOne, playerTwo) {
+        viewModel.setPlayers(playerOne, playerTwo)
         onStatusChange("$playerOne's turn")
     }
+    val board = viewModel.boardColors
+    val currentPlayer = viewModel.currentPlayerNumber
+    val winningPlayer = viewModel.winningPlayerNumber
+    val isDraw = viewModel.isDraw
 
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -68,25 +81,29 @@ fun TicTacToeBoard(
                             if (winningPlayer != null || isDraw) return@TicTacToeCell
 
                             if (board[row][col] == Color.LightGray) {
-                                val newBoard = board.map { it.toMutableList()}
-                                newBoard[row][col] =
+                                val colorToPlace =
                                     if (currentPlayer == 1) playerOneColor else playerTwoColor
-                                board = newBoard
+                                viewModel.placeColor(row, col, colorToPlace)
+                                val updatedBoard = viewModel.boardColors
 
-                                if (hasWinner(newBoard)) {
-                                    winningPlayer = currentPlayer
-                                    val winnerName = if (winningPlayer == 1) playerOne else playerTwo
+                                if (hasWinner(updatedBoard)) {
+                                    viewModel.setWinner(currentPlayer)
+                                    val winnerName =
+                                        if (currentPlayer == 1) viewModel.playerOne
+                                        else viewModel.playerTwo
                                     onStatusChange("The winner is $winnerName")
                                 } else {
 //                                  Check if there are no gray cells
-                                    isDraw = newBoard.all {row -> row.all {it != Color.LightGray}}
-                                    if (isDraw) {
+                                    val isDrawNow = updatedBoard.all {row -> row.all {it != Color.LightGray}}
+                                    if (isDrawNow) {
+                                        viewModel.isDraw = true
                                         onStatusChange("It's a draw!")
                                     }
-                                    if (!isDraw) {
-                                        currentPlayer = if (currentPlayer == 1) 2 else 1
-                                        val nextName = if (currentPlayer == 1) playerOne else playerTwo
-                                        onStatusChange("Player $currentPlayer's turn ")
+                                    if (!isDrawNow) {
+                                        viewModel.togglePlayer()
+
+                                        val nextName = if (viewModel.currentPlayerNumber == 1) viewModel.playerOne
+                                        else viewModel.playerTwo
                                         onStatusChange("$nextName's turn")
                                     }
                                 }
@@ -101,12 +118,34 @@ fun TicTacToeBoard(
 }
 
 @Composable
-fun TicTacToeCell(row: Int, col: Int, color: Color, onClick: ()-> Unit, modifier: Modifier= Modifier) {
+fun TicTacToeCell(
+    row: Int,
+    col: Int,
+    color: Color,
+    onClick: ()-> Unit,
+    modifier: Modifier= Modifier) {
+
+    val animatedColor by animateColorAsState(
+        targetValue = color,
+        animationSpec = tween(durationMillis = 300),
+        label = "cellColor"
+    )
+
+    val targetScale = if (color != Color.LightGray) 1f else 0.9f
+    val animatedScale by animateFloatAsState(
+        targetValue = targetScale,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "cellScale"
+    )
     Box(
         modifier = Modifier
             .size(100.dp)
+            .scale(animatedScale)
             .clip(RoundedCornerShape(8.dp))
-            .background(color)
+            .background(animatedColor)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {}
