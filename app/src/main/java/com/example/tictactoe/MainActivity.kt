@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,17 +29,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.tictactoe.ui.theme.TicTacToeTheme
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.clickable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.clickable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 
 
 class MainActivity : ComponentActivity() {
@@ -59,10 +64,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TicTacToeGame(modifier: Modifier = Modifier) {
+
+    var status by remember { mutableStateOf("Player 1's turn") }
+    var gameId by remember { mutableStateOf(0) }
+
     Column(
         modifier = Modifier
         .fillMaxSize()
-        .background(Color.Cyan))
+        .background(colorResource(id=R.color.background)))
 
     {
 
@@ -75,8 +84,12 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
             ) {
             Text(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    ,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
+                color = colorResource(id=R.color.title),
                 text = stringResource(R.string.title))
         }
 
@@ -84,10 +97,11 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Red)
                 .weight(2f),
             contentAlignment = Alignment.Center) {
-            TicTacToeBoard()
+            key (gameId) {
+                TicTacToeBoard(onStatusChange = {status = it})
+            }
         }
 
 //        player info
@@ -150,7 +164,7 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    text = stringResource(R.string.winner_info)
+                    text = status
                 )
             }
 //            New game section
@@ -162,8 +176,10 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
             {
 
                 Button(onClick = {
-                    println("Button was clicked")
-                }) {
+                    gameId ++
+                    status = "Player 1's turn"
+                }
+                ) {
                     Text(stringResource(R.string.new_game_button))
                 }
             }
@@ -187,13 +203,20 @@ fun TicTacToeCell(row: Int, col: Int, color: Color, onClick: ()-> Unit, modifier
 }
 
 @Composable
-fun TicTacToeBoard(modifier: Modifier= Modifier) {
+fun TicTacToeBoard(
+    modifier: Modifier= Modifier,
+    onStatusChange: (String) -> Unit={}
+    ) {
     val playerOneColor = colorResource(id = R.color.player_one_color)
     val playerTwoColor = colorResource(id = R.color.player_two_color)
     var board by remember { mutableStateOf(List(3) {MutableList(3) {Color.LightGray} })}
     var currentPlayer by remember { mutableStateOf(1) }
     var winningPlayer by remember { mutableStateOf<Int?> (null)}
     var isDraw by remember { mutableStateOf<Boolean> (false)}
+
+    LaunchedEffect(Unit) {
+        onStatusChange("Player 1's turn")
+    }
 
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -227,11 +250,16 @@ fun TicTacToeBoard(modifier: Modifier= Modifier) {
 
                                 if (hasWinner(newBoard)) {
                                     winningPlayer = currentPlayer
+                                    onStatusChange("The winner is player $winningPlayer")
                                 } else {
 //                                  Check if there are no gray cells
                                     isDraw = newBoard.all {row -> row.all {it != Color.LightGray}}
+                                    if (isDraw) {
+                                        onStatusChange("Its a draw!")
+                                    }
                                     if (!isDraw) {
                                         currentPlayer = if (currentPlayer == 1) 2 else 1
+                                        onStatusChange("Player $currentPlayer's turn' ")
                                     }
                                 }
 
