@@ -192,6 +192,9 @@ fun TicTacToeBoard(modifier: Modifier= Modifier) {
     val playerTwoColor = colorResource(id = R.color.player_two_color)
     var board by remember { mutableStateOf(List(3) {MutableList(3) {Color.LightGray} })}
     var currentPlayer by remember { mutableStateOf(1) }
+    var winningPlayer by remember { mutableStateOf<Int?> (null)}
+    var isDraw by remember { mutableStateOf<Boolean> (false)}
+
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(8.dp),
@@ -212,12 +215,26 @@ fun TicTacToeBoard(modifier: Modifier= Modifier) {
                         col = col,
                         color = board[row][col],
                         onClick = {
+
+//                          Stop the game if there is the winner or if it's a draw
+                            if (winningPlayer != null || isDraw) return@TicTacToeCell
+
                             if (board[row][col] == Color.LightGray) {
                                 val newBoard = board.map { it.toMutableList()}
                                 newBoard[row][col] =
                                     if (currentPlayer == 1) playerOneColor else playerTwoColor
                                 board = newBoard
-                                currentPlayer = if (currentPlayer == 1) 2 else 1
+
+                                if (hasWinner(newBoard)) {
+                                    winningPlayer = currentPlayer
+                                } else {
+//                                  Check if there are no gray cells
+                                    isDraw = newBoard.all {row -> row.all {it != Color.LightGray}}
+                                    if (!isDraw) {
+                                        currentPlayer = if (currentPlayer == 1) 2 else 1
+                                    }
+                                }
+
                             }
                         }
                         )
