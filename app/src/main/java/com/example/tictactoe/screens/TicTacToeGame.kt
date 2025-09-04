@@ -29,6 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tictactoe.R
 import com.example.tictactoe.game.TicTacToeBoard
+import com.example.tictactoe.game.TicTacToeViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun TicTacToeGame(
@@ -36,9 +39,16 @@ fun TicTacToeGame(
     playerOne: String,
     playerTwo: String
 ) {
+    val viewModel: TicTacToeViewModel = viewModel()
+
     val initialStatus = "$playerOne's turn"
     var status by remember { mutableStateOf(initialStatus) }
     var gameId by remember { mutableStateOf(0) }
+
+    LaunchedEffect(playerOne, playerTwo) {
+        viewModel.setPlayers(playerOne, playerTwo)
+        status = "$playerOne's turn"
+    }
 
     Column(
         modifier = Modifier
@@ -151,7 +161,9 @@ fun TicTacToeGame(
             {
 
                 Button(onClick = {
-                    gameId ++
+                    // reset View model state
+                    viewModel.resetGame()
+                    gameId++
                     status = "$playerOne's turn"
                 }
                 ) {
