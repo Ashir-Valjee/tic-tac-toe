@@ -47,6 +47,14 @@ import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 
+import android.net.Uri
+
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,17 +63,55 @@ class MainActivity : ComponentActivity() {
         setContent {
             TicTacToeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    TicTacToeGame(
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    Box(Modifier.padding(innerPadding)) {
+                        App()
+                    }
                 }
             }
         }
     }
 }
 
+
 @Composable
-fun TicTacToeGame(modifier: Modifier = Modifier) {
+fun App() {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "home") {
+        // Home screen route
+        composable("home") {
+            HomeScreen { playerOneName, playerTwoName ->
+                val encodedPlayerOne = Uri.encode(playerOneName)
+                val encodedPlayerTwo = Uri.encode(playerTwoName)
+                navController.navigate("game/$encodedPlayerOne/$encodedPlayerTwo")
+            }
+        }
+
+        // Game screen route with arguments
+        composable(
+            route = "game/{playerOne}/{playerTwo}",
+            arguments = listOf(
+                navArgument("playerOne") { type = NavType.StringType },
+                navArgument("playerTwo") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val playerOne = Uri.decode(backStackEntry.arguments?.getString("playerOne") ?: "Player 1")
+            val playerTwo = Uri.decode(backStackEntry.arguments?.getString("playerTwo") ?: "Player 2")
+
+            TicTacToeGame(
+                playerOne = playerOne,
+                playerTwo = playerTwo
+            )
+        }
+    }
+}
+
+@Composable
+fun TicTacToeGame(
+    modifier: Modifier = Modifier,
+    playerOne: String,
+    playerTwo: String
+) {
 
     var status by remember { mutableStateOf("Player 1's turn") }
     var gameId by remember { mutableStateOf(0) }
@@ -122,7 +168,7 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
                 ) {
                 Text(
                     modifier = Modifier,
-                    text = stringResource(R.string.player_1_info)
+                    text = stringResource(R.string.player_1_info, playerOne)
                 )
                 Box(modifier = Modifier
                     .size(25.dp)
@@ -146,7 +192,7 @@ fun TicTacToeGame(modifier: Modifier = Modifier) {
                     modifier = Modifier,
 
 
-                    text = stringResource(R.string.player_2_info)
+                    text = stringResource(R.string.player_2_info, playerTwo)
                 )
                 Box(modifier = Modifier
                     .size(25.dp)
@@ -309,7 +355,8 @@ fun hasWinner(board: List<List<Color>>): Boolean {
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier= Modifier
+    modifier: Modifier= Modifier,
+    onStart: (String, String) -> Unit
 ) {
 
 
@@ -413,8 +460,9 @@ fun HomeScreen(
         {
 
             Button(onClick = {
-                println("Started Game")
-            }
+                onStart(playerOne.trim(), playerTwo.trim())
+            },
+                enabled = playerOne.isNotBlank() && playerTwo.isNotBlank()
             ) {
                 Text(stringResource(R.string.start_game_button))
             }
@@ -433,11 +481,11 @@ fun HomeScreen(
 //    }
 //}
 
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    TicTacToeTheme {
-        HomeScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun HomeScreenPreview() {
+//    TicTacToeTheme {
+//        HomeScreen()
+//    }
+//}
 
