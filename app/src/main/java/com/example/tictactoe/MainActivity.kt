@@ -255,11 +255,11 @@ fun TicTacToeBoard(
 //                                  Check if there are no gray cells
                                     isDraw = newBoard.all {row -> row.all {it != Color.LightGray}}
                                     if (isDraw) {
-                                        onStatusChange("Its a draw!")
+                                        onStatusChange("It's a draw!")
                                     }
                                     if (!isDraw) {
                                         currentPlayer = if (currentPlayer == 1) 2 else 1
-                                        onStatusChange("Player $currentPlayer's turn' ")
+                                        onStatusChange("Player $currentPlayer's turn ")
                                     }
                                 }
 
