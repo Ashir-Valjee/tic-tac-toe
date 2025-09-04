@@ -36,8 +36,8 @@ fun TicTacToeGame(
     playerOne: String,
     playerTwo: String
 ) {
-
-    var status by remember { mutableStateOf("Player 1's turn") }
+    val initialStatus = "$playerOne's turn"
+    var status by remember { mutableStateOf(initialStatus) }
     var gameId by remember { mutableStateOf(0) }
 
     Column(
@@ -72,7 +72,10 @@ fun TicTacToeGame(
                 .weight(2f),
             contentAlignment = Alignment.Center) {
             key (gameId) {
-                TicTacToeBoard(onStatusChange = {status = it})
+                TicTacToeBoard(
+                    onStatusChange = {status = it},
+                    playerOne = playerOne,
+                    playerTwo = playerTwo )
             }
         }
 
