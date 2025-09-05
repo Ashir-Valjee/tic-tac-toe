@@ -25,7 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tictactoe.R
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import kotlin.math.round
 
 
 @Composable
@@ -128,7 +131,8 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(top = 16.dp),
+                .padding(top = 16.dp)
+                ,
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -136,7 +140,8 @@ fun HomeScreen(
                 contentDescription = "Tic Tac Toe Illustration",
                 modifier = Modifier
                     .fillMaxWidth(0.6f) // make it 60% of screen width
-                    .padding(top = 24.dp)
+
+                    .clip(RoundedCornerShape(24.dp))
             )
         }
 
