@@ -33,7 +33,7 @@ fun TicTacToeBoard(
     modifier: Modifier= Modifier,
     playerOne: String,
     playerTwo: String,
-    currentPlayer: Int,
+
     onStatusChange: (String) -> Unit={}
 ) {
 
@@ -41,7 +41,7 @@ fun TicTacToeBoard(
 
     val playerOneColor = colorResource(id = R.color.player_one_color)
     val playerTwoColor = colorResource(id = R.color.player_two_color)
-
+    val currentPlayer = viewModel.currentPlayerNumber
 
 
     LaunchedEffect(playerOne, playerTwo) {
