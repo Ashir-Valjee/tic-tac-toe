@@ -24,6 +24,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tictactoe.R
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+
 
 @Composable
 fun HomeScreen(
@@ -120,8 +123,22 @@ fun HomeScreen(
             }
 
         }
-
-
+// image
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(top = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.tic_tac), // your drawable
+                contentDescription = "Tic Tac Toe Illustration",
+                modifier = Modifier
+                    .fillMaxWidth(0.6f) // make it 60% of screen width
+                    .padding(top = 24.dp)
+            )
+        }
 
 //      Start Game
         Box(modifier = Modifier
