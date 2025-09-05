@@ -33,6 +33,7 @@ fun TicTacToeBoard(
     modifier: Modifier= Modifier,
     playerOne: String,
     playerTwo: String,
+    currentPlayer: Int,
     onStatusChange: (String) -> Unit={}
 ) {
 
@@ -48,7 +49,6 @@ fun TicTacToeBoard(
         onStatusChange("$playerOne's turn")
     }
     val board = viewModel.boardColors
-    val currentPlayer = viewModel.currentPlayerNumber
     val winningPlayer = viewModel.winningPlayerNumber
     val isDraw = viewModel.isDraw
 
