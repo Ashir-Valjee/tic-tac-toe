@@ -87,8 +87,8 @@ fun TicTacToeGame(
                 TicTacToeBoard(
                     onStatusChange = {status = it},
                     playerOne = playerOne,
-                    playerTwo = playerTwo,
-                    currentPlayer = currentPlayer
+                    playerTwo = playerTwo
+
                 )
             }
         }
