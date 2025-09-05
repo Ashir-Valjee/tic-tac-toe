@@ -46,6 +46,7 @@ fun TicTacToeGame(
     var status by remember { mutableStateOf(initialStatus) }
     var gameId by remember { mutableStateOf(0) }
     val currentPlayer = viewModel.currentPlayerNumber
+    val isDraw = viewModel.isDraw
 
     LaunchedEffect(playerOne, playerTwo) {
         viewModel.setPlayers(playerOne, playerTwo)
@@ -160,7 +161,11 @@ fun TicTacToeGame(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     text = status,
-                    color = if (currentPlayer == 1) colorResource(id = R.color.player_one_color) else colorResource(id = R.color.player_two_color)
+                    color = when {
+                        isDraw -> colorResource(R.color.draw_text)
+                        currentPlayer == 1 -> colorResource(R.color.player_one_color)
+                        else -> colorResource(R.color.player_two_color)
+                    }
                 )
             }
 //            New game section
