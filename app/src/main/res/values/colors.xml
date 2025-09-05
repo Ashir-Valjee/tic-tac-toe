@@ -11,4 +11,5 @@
     <color name="title">#55506E</color>
     <color name="player_one_color">#ff8787</color>
     <color name="player_two_color">#40c057</color>
+    <color name="player_info">#55506E</color>
 </resources>

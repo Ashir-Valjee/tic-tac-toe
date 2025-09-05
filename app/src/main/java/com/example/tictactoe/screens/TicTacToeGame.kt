@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +45,7 @@ fun TicTacToeGame(
     val initialStatus = "$playerOne's turn"
     var status by remember { mutableStateOf(initialStatus) }
     var gameId by remember { mutableStateOf(0) }
+    val currentPlayer = viewModel.currentPlayerNumber
 
     LaunchedEffect(playerOne, playerTwo) {
         viewModel.setPlayers(playerOne, playerTwo)
@@ -85,7 +87,9 @@ fun TicTacToeGame(
                 TicTacToeBoard(
                     onStatusChange = {status = it},
                     playerOne = playerOne,
-                    playerTwo = playerTwo )
+                    playerTwo = playerTwo,
+                    currentPlayer = currentPlayer
+                )
             }
         }
 
@@ -105,6 +109,9 @@ fun TicTacToeGame(
             ) {
                 Text(
                     modifier = Modifier,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(R.color.player_info),
                     text = stringResource(R.string.player_1_info, playerOne)
                 )
                 Box(modifier = Modifier
@@ -127,8 +134,9 @@ fun TicTacToeGame(
             ) {
                 Text(
                     modifier = Modifier,
-
-
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(R.color.player_info),
                     text = stringResource(R.string.player_2_info, playerTwo)
                 )
                 Box(modifier = Modifier
@@ -149,7 +157,10 @@ fun TicTacToeGame(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    text = status
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    text = status,
+                    color = if (currentPlayer == 1) colorResource(id = R.color.player_one_color) else colorResource(id = R.color.player_two_color)
                 )
             }
 //            New game section
